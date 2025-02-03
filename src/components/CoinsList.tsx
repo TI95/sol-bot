@@ -1,29 +1,29 @@
 import React from "react";
-import { ApiResponse } from "../types/dex-screener-latests-tokents";
+import { usePools } from "../hooks/usePools";  // Подключаем хук
 
+const CoinsList: React.FC = () => {
+  const pools = usePools();   
 
+   if (!pools) {
+    return <div>Loading or no pools available...</div>;
+  }
 
-
-const CoinsList: React.FC<{ pools: ApiResponse | null }> = ({ pools }) => {
-    console.log(pools)
-
-    if (pools) {
-
-        return (
-            <div >
-                {pools.pairs.map((pool) => (
-                    pool.chainId === 'solana' ?
-                        <div>
-                        
-                            <a href={pool.url} target="_blank">Link</a>
-                            <p>{pool.baseToken.address}</p>
-                        </div> :
-                        null
-                ))}
-            </div>
-        );
-    }
-
+  return (
+    <div className="">
+      {pools.map((pool) => (
+        pool.chainId === 'solana' && pool.dexId === 'raydium' && pool.liquidity.usd >= 40000 ? (
+          <div key={pool.pairAddress}>
+            <a href={pool.url} target="_blank" rel="noopener noreferrer">
+              Link
+            </a>
+            <p>{pool.baseToken.name}</p>
+            <p>{pool.baseToken.address}</p>
+          </div>
+        ) : null
+      ))}
+    </div>
+  );
 };
 
 export default CoinsList;
+

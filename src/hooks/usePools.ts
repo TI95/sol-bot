@@ -1,18 +1,23 @@
 import { useEffect, useState } from "react";
 import { getPools } from "../api/dex-screener-api";
-import { ApiResponse } from "../types/dex-screener-latests-tokents";
+import { TokenPairProfile } from "../types/dex-screener-pair.ts";
 
 export const usePools = () => {
-  
-  const [pools, setPools] = useState<ApiResponse | null>(null);
+  const [pools, setPools] = useState<TokenPairProfile[] | null>(null);
 
   useEffect(() => {
     const fetchPools = async () => {
-      const data = await getPools();
-      setPools(data);
+      try {
+        const data = await getPools();
+         setPools(data);   
+      } catch (error) {
+        console.error("Ошибка загрузки пулов:", error);
+        setPools(null);  
+      }
     };
-    fetchPools();
-  }, []);
+    
+    fetchPools();   
+  }, []);   
 
-  return pools;
+  return pools;   
 };
